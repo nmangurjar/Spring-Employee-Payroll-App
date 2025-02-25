@@ -7,12 +7,14 @@ public class Employee {
     private String name;
     private double salary;
 
-    public Employee() {}
-    public Employee(String name, double salary) {
-        this.id = id;
-        this.name = name;
-        this.salary = salary;
+    public Employee() {
     }
+    public Employee(long id,String name ,double salary) {
+        this.id = id;
+        this.salary = salary;
+        this.name = name;
+    }
+
 
     // Getters and Setters
     public Long getId() { return id; }
