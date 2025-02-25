@@ -1,0 +1,31 @@
+package com.employeepayroll.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+
+    @GetMapping
+    public String getEmployees() {
+        return "This is GET Mapping";
+    }
+
+    @PostMapping
+    public String addEmployee() {
+        return "This is POST Mapping";
+    }
+
+    @PutMapping("/{id}")
+    public String updateEmployee(@PathVariable Long id) {
+        return "This is PUT Mapping for employee ID: " + id;
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        return "This is DELETE Mapping for employee ID: " + id;
+    }
+}
