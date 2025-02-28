@@ -1,3 +1,4 @@
+
 package com.employeepayroll;
 
 import org.springframework.boot.SpringApplication;
@@ -7,8 +8,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class SpringEmployeePayrollAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringEmployeePayrollAppApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SpringEmployeePayrollAppApplication.class, args);
+    }
 }
 
