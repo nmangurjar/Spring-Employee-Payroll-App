@@ -2,6 +2,7 @@ package com.employeepayroll.service;
 
 
 import com.employeepayroll.dto.EmployeeDTO;
+import com.employeepayroll.exceptionhandler.EmployeeNotFoundException;
 import com.employeepayroll.model.Employee;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -35,28 +36,22 @@ public class EmployeeService {
                 .map(emp -> new EmployeeDTO(emp.getId(), emp.getName(), emp.getSalary()))
                 .collect(Collectors.toList());
     }
+
     public EmployeeDTO getEmployeeById(Long id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (employee.isEmpty()) {
-            log.warn("Employee not found with ID: {}", id);
-            throw new RuntimeException("Employee not found with ID: " + id);
-        }
-        Employee emp = employee.get();
-        log.info("Employee Found: {}", emp.getName());
-        return new EmployeeDTO(emp.getId(), emp.getName(), emp.getSalary());
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
+        log.info("Employee Found: {}", employee.getName());
+        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getSalary());
     }
+
     public String updateEmployee(Long id, EmployeeDTO employeeDTO) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (employee.isPresent()) {
-            Employee emp = employee.get();
-            emp.setName(employeeDTO.getName());
-            emp.setSalary(employeeDTO.getSalary());
-            employeeRepository.save(emp);
-            log.info("Employee updated successfully with ID: {}", id);
-            return "Employee updated successfully!";
-        }
-        log.warn("Employee not found with ID: {}", id);
-        return "Employee not found!";
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
+        employee.setName(employeeDTO.getName());
+        employee.setSalary(employeeDTO.getSalary());
+        employeeRepository.save(employee);
+        log.info("Employee updated successfully with ID: {}", id);
+        return "Employee updated successfully!";
     }
 
     public String deleteEmployee(Long id) {
@@ -65,10 +60,7 @@ public class EmployeeService {
             log.info("Employee deleted successfully with ID: {}", id);
             return "Employee deleted successfully!";
         } else {
-            log.warn("Employee not found with ID: {}", id);
-            return "Employee not found!";
+            throw new EmployeeNotFoundException("Employee not found with ID: " + id);
         }
     }
-
-
 }
