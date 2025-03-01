@@ -23,6 +23,11 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setName(employeeDTO.getName());
         employee.setSalary(employeeDTO.getSalary());
+        employee.setGender(employeeDTO.getGender());
+        employee.setStartDate(employeeDTO.getStartDate());
+        employee.setNote(employeeDTO.getNote());
+        employee.setProfilePic(employeeDTO.getProfilePic());
+        employee.setDepartment(employeeDTO.getDepartment());
 
         employeeRepository.save(employee);
         log.info("Employee Added: {}", employee.getName());
@@ -33,7 +38,7 @@ public class EmployeeService {
         log.info("Fetching All Employees");
         return employeeRepository.findAll()
                 .stream()
-                .map(emp -> new EmployeeDTO(emp.getId(), emp.getName(), emp.getSalary()))
+                .map(emp -> new EmployeeDTO(emp.getId(), emp.getName(), emp.getSalary(), emp.getGender(), emp.getStartDate(), emp.getNote(), emp.getProfilePic(), emp.getDepartment()))
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +46,7 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
         log.info("Employee Found: {}", employee.getName());
-        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getSalary());
+        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getSalary(), employee.getGender(), employee.getStartDate(), employee.getNote(), employee.getProfilePic(), employee.getDepartment());
     }
 
     public String updateEmployee(Long id, EmployeeDTO employeeDTO) {
@@ -49,18 +54,20 @@ public class EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
         employee.setName(employeeDTO.getName());
         employee.setSalary(employeeDTO.getSalary());
+        employee.setGender(employeeDTO.getGender());
+        employee.setStartDate(employeeDTO.getStartDate());
+        employee.setNote(employeeDTO.getNote());
+        employee.setProfilePic(employeeDTO.getProfilePic());
+        employee.setDepartment(employeeDTO.getDepartment());
         employeeRepository.save(employee);
         log.info("Employee updated successfully with ID: {}", id);
         return "Employee updated successfully!";
     }
-
     public String deleteEmployee(Long id) {
-        if (employeeRepository.existsById(id)) {
-            employeeRepository.deleteById(id);
-            log.info("Employee deleted successfully with ID: {}", id);
-            return "Employee deleted successfully!";
-        } else {
-            throw new EmployeeNotFoundException("Employee not found with ID: " + id);
-        }
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
+        employeeRepository.deleteById(id);
+        log.info("Employee deleted successfully with ID: {}", id);
+        return "Employee deleted successfully!";
     }
 }
